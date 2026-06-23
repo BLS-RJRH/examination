@@ -110,10 +110,10 @@
     </div>
 
     <script>
-        // เปลี่ยนเป็น URL เว็บแอป (Web app URL) ที่ได้มาจาก Google Apps Script ของคุณ
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbymOHRy9O63lzzpl7gt7HwaBnEygW08_3b8XeFnzPqcMcDlC2A7Z2e_fv_mJbaFe8U1wQ/exec";
+        // ใส่ลิงก์ Web App URL ของคุณเรียบร้อยแล้ว
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwxpjFHwGSVn4GOtqgmAzIIakp6R0BxBCe80_aBZQIFPFYL-ZHsJJqjr9OOOvKiz0NMZw/exec";
 
-        // คลังข้อสอบ 20 ข้อ (ตัดตัวเลขข้อด้านหน้าคำถามออกตามที่บรีฟ)
+        // คลังข้อสอบ 20 ข้อ (ไม่มีตัวเลขข้อระบุข้างหน้า)
         const rawQuestions = [
             { q: "เมื่อพบผู้ป่วยล้มฟุบลงต่อหน้าในที่สาธารณะ ขั้นตอนแรกสุดที่สำคัญที่สุดคืออะไร?", a: ["ประเมินความปลอดภัยของสถานที่ (Scene Safety)", "เข้าไปเขย่าตัวเรียกทันที", "ทำการกดหน้าอกทันที", "ตรวจชีพจรที่คอ"], c: 0 },
             { q: "อัตราความเร็วในการกดหน้าอก (Chest Compression Rate) สำหรับผู้ใหญ่ตามมาตรฐานสากลคือข้อใด?", a: ["60 - 80 ครั้งต่อนาที", "80 - 100 ครั้งต่อนาที", "100 - 120 ครั้งต่อนาที", "120 - 140 ครั้งต่อนาที"], c: 2 },
@@ -129,7 +129,7 @@
             { q: "หากผู้ป่วยมีเหงื่อท่วมหน้าอก หรือตัวเปียกโชก ก่อนติดแผ่น AED ควรจัดการอย่างไร?", a: ["ติดทับลงไปได้ทันทีเพราะกระแสไฟแรงสูง", "เช็ดหน้าอกผู้ป่วยให้แห้งก่อนติดแผ่น", "ห้ามใช้เครื่อง AED เด็ดขาด ให้กดหน้าอกอย่างเดียว", "นำผ้าหนาๆ มารองใต้แผ่น"], c: 1 },
             { q: "การประเมินผู้ป่วยหมดสติว่า 'ไม่หายใจ' หรือ 'หายใจเฮือก' เพื่อเริ่มทำ CPR ควรใช้เวลานานเท่าใด?", a: ["ห้ามเกิน 5 วินาที", "ใช้วลาอย่างน้อย 5 วินาที แต่ไม่เกิน 10 วินาที", "รอจนแน่ใจประมาณ 30 วินาที", "1 นาทีเต็ม"], c: 1 },
             { q: "เมื่อโทรแจ้งสายด่วน 1669 ข้อมูลใดที่สำคัญที่สุดที่ประชาชนควรแจ้งเจ้าหน้าที่?", a: ["สถานที่เกิดเหตุที่ชัดเจน อาการของผู้ป่วย และบอกว่ากำลังทำ CPR", "ประวัติการศึกษาของผู้ป่วย", "ชื่อของโรงพยาบาลที่อยากไป", "ราคาของอุปกรณ์ที่ใช้"], c: 0 },
-            { q: "ในกรณีใดที่คุณสามารถ 'หยุด' ปฏิบัติการ CPR ได้ชั่วคราวหรือถาวร?", a: ["ทำไปได้ 2 นาทีแล้วเหนื่อย", "เมื่อผู้ป่วยกลับมาเคลื่อนไหว หายใจได้ปกติ หรือมีทีมแพทย์กู้ชีพมารับช่วงต่ออย่างเป็นทางการ", "เมื่อคนมุงบอกให้หยุด", "เมื่อผ่านไปเกิน 5 นาทีแล้วอาการไม่ดีขึ้น"], c: 1 },
+            { q: "ในกรณีใดที่คุณสามารถ 'หยุด' ปฏิบัติการ CPR ได้ชั่วคราวหรือถาวร?", a: ["ทำไปได้ 2 นาทีแล้วเหนื่อย", "เมื่อผู้ป่วยกลับมาเคลื่อนไหาย หายใจได้ปกติ หรือมีทีมแพทย์กู้ชีพมารับช่วงต่ออย่างเป็นทางการ", "เมื่อคนมุงบอกให้หยุด", "เมื่อผ่านไปเกิน 5 นาทีแล้วอาการไม่ดีขึ้น"], c: 1 },
             { q: "ท่าทางการวางมือในการกดหน้าอกผู้ใหญ่ที่ถูกต้องคือตำแหน่งใด?", a: ["บริเวณลิ้นปี่พอดี", "ครึ่งล่างของกระดูกหน้าอก (บริเวณกึ่งกลางระหว่างราวนมทั้งสองข้าง)", "บริเวณหน้าอกข้างซ้ายตรงหัวใจ", "ใต้ซี่โครงขวา"], c: 1 },
             { q: "การจัดท่าทางของผู้ช่วยในขณะกดหน้าอกที่ถูกต้องและช่วยผ่อนแรงคือข้อใด?", a: ["นั่งคุกเข่าข้างผู้ป่วย แขนเหยียดตรงทั้งสองข้างตั้งฉากกับหน้าอกผู้ป่วย ใช้แรงจากสะโพกทิ้งน้ำหนักลงไป", "งอข้อศอกเล็กน้อยเพื่อความยืดหยุ่น", "นั่งเก้าอี้ข้างเตียงแล้วก้มลงกด", "ยืนโน้มตัวลงมา"], c: 0 },
             { q: "ข้อใดคือข้อห้ามที่สำคัญในการใช้เครื่อง AED ในที่สาธารณะ?", a: ["ห้ามใช้ในที่ๆ มีฝนตกหนักหรือลอยคออยู่ในน้ำท่วม", "ห้ามใช้กับคนที่มีอายุมากกว่า 60 ปี", "ห้ามใช้ในอาคารปิดที่มีเครื่องปรับอากาศ", "ห้ามใช้เกิน 2 ครั้งต่อคน"], c: 0 },
@@ -139,7 +139,7 @@
 
         let quizQuestions = [];
         let currentQuestionIndex = 0;
-        let userAnswers = new Array(10).fill(null); // เก็บคำตอบที่ผู้เรียนเลือกไว้แต่ละข้อ
+        let userAnswers = new Array(10).fill(null);
         let userData = {};
         let startTime = 0;
         let cheatCount = 0;
@@ -154,12 +154,10 @@
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
 
-        // ฟังก์ชันสุ่มข้อสอบ
         function getShuffledQuestions(array, count) {
             return [...array].sort(() => 0.5 - Math.random()).slice(0, count);
         }
 
-        // หน้าล็อกอิน/กรอกข้อมูล
         infoForm.addEventListener('submit', function(e) {
             e.preventDefault();
             userData = {
@@ -175,7 +173,6 @@
             startTime = Date.now();
             cheatCount = 0;
 
-            // จับการทุจริตสลับหน้าจอ
             document.addEventListener('visibilitychange', handleVisibilityChange);
 
             infoForm.classList.add('hidden');
@@ -190,15 +187,13 @@
             }
         }
 
-        // การแสดงคำถามในแต่ละข้อ
         function showQuestion() {
             optionsContainer.innerHTML = '';
             progressText.innerText = `ข้อที่ ${currentQuestionIndex + 1} จาก 10`;
             
             const qData = quizQuestions[currentQuestionIndex];
-            questionText.innerText = qData.q; // คำถามที่ตัดตัวเลขข้อออกแล้ว
+            questionText.innerText = qData.q;
 
-            // จัดการปุ่มย้อนกลับ
             if (currentQuestionIndex === 0) {
                 prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
                 prevBtn.disabled = true;
@@ -207,7 +202,6 @@
                 prevBtn.disabled = false;
             }
 
-            // ปรับข้อความปุ่มถัดไปในข้อสุดท้าย
             if (currentQuestionIndex === 9) {
                 nextBtn.innerText = "ตรวจสอบคำตอบ";
                 nextBtn.classList.replace('bg-sky-600', 'bg-amber-600');
@@ -218,7 +212,6 @@
                 nextBtn.classList.replace('hover:bg-amber-700', 'hover:bg-sky-700');
             }
 
-            // สร้างตัวเลือก ก ข ค ง
             qData.a.forEach((option, index) => {
                 const label = document.createElement('label');
                 const isChecked = userAnswers[currentQuestionIndex] === index;
@@ -230,7 +223,7 @@
                 `;
                 
                 label.querySelector('input').addEventListener('change', () => {
-                    userAnswers[currentQuestionIndex] = index; // บันทึกคำตอบลง Array
+                    userAnswers[currentQuestionIndex] = index;
                     document.querySelectorAll('#optionsContainer label').forEach(l => l.className = "flex items-center p-3 border rounded-lg cursor-pointer bg-white hover:bg-slate-50 transition duration-150 border-slate-200 block");
                     label.className = "flex items-center p-3 border rounded-lg cursor-pointer bg-sky-50 hover:bg-sky-100 transition duration-150 border-sky-600 font-semibold block";
                 });
@@ -239,18 +232,15 @@
             });
         }
 
-        // เมื่อกดปุ่มถัดไป
         nextBtn.addEventListener('click', () => {
             if (currentQuestionIndex < 9) {
                 currentQuestionIndex++;
                 showQuestion();
             } else {
-                // ถ้าเป็นข้อสุดท้าย ให้ไปหน้าทบทวนข้อมูลก่อนส่งคำตอบ
                 goToReviewPage();
             }
         });
 
-        // เมื่อกดปุ่มย้อนกลับ
         prevBtn.addEventListener('click', () => {
             if (currentQuestionIndex > 0) {
                 currentQuestionIndex--;
@@ -258,31 +248,26 @@
             }
         });
 
-        // เปิดหน้า Review ทบทวนข้อมูลเบื้องต้น
         function goToReviewPage() {
             quizForm.classList.add('hidden');
             reviewPage.classList.remove('hidden');
             
-            // แสดงผลการตรวจสอบข้อมูล
             document.getElementById('revEmpId').innerText = userData.employeeId;
             document.getElementById('revName').innerText = `${userData.prefix}${userData.fullName}`;
             document.getElementById('revDept').innerText = userData.department;
         }
 
-        // ปุ่มย้อนกลับจากหน้าทบทวนไปทำข้อสอบใหม่
         document.getElementById('backToQuizBtn').addEventListener('click', () => {
             reviewPage.classList.add('hidden');
             quizForm.classList.remove('hidden');
             showQuestion();
         });
 
-        // กดยืนยันส่งข้อสอบสุดท้าย (ตรวจคำตอบและส่งเข้า Sheet)
         document.getElementById('submitQuizBtn').addEventListener('click', function() {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             reviewPage.classList.add('hidden');
             resultPage.classList.remove('hidden');
 
-            // คำนวณคะแนน
             let score = 0;
             quizQuestions.forEach((q, idx) => {
                 if (userAnswers[idx] === q.c) {
@@ -290,7 +275,7 @@
                 }
             });
 
-            const isPassed = score >= 7; // ผ่านที่ 70% ขึ้นไป
+            const isPassed = score >= 7;
             const statusStr = isPassed ? "ผ่าน" : "ไม่ผ่าน";
             const timeSpentSeconds = Math.floor((Date.now() - startTime) / 1000);
 
@@ -317,20 +302,21 @@
 
             document.getElementById('savingText').classList.remove('hidden');
 
-            // สร้าง Payload พร้อมสถิติทุจริตและเวลาทำจริงส่งไปเก็บใน Google Sheet
-            const payload = {
-                ...userData,
-                score: score,
-                status: statusStr,
-                timeSpent: timeSpentSeconds,
-                cheatCount: cheatCount
-            };
+            // ใช้ระบบส่งข้อมูลผ่าน x-www-form-urlencoded เพื่อให้เข้าเซิร์ฟเวอร์ Google Sheets ได้ 100%
+            const formData = new URLSearchParams();
+            formData.append('employeeId', userData.employeeId);
+            formData.append('prefix', userData.prefix);
+            formData.append('fullName', userData.fullName);
+            formData.append('department', userData.department);
+            formData.append('score', score);
+            formData.append('status', statusStr);
+            formData.append('timeSpent', timeSpentSeconds);
+            formData.append('cheatCount', cheatCount);
 
             fetch(WEB_APP_URL, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
             })
             .then(() => {
                 document.getElementById('savingText').innerText = "✓ บันทึกผลสอบลงระบบสำเร็จ";
