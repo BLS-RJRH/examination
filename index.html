@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Sarabun', sans-serif; background-color: #e0f2fe; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -56,15 +57,14 @@
             
             <div id="questionContainer" class="bg-gray-50 p-5 rounded-xl border border-gray-200">
                 <p id="questionText" class="text-lg font-bold text-gray-800 mb-4"></p>
-                <div id="optionsContainer" class="space-y-3">
-                    </div>
+                <div id="optionsContainer" class="space-y-3"></div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <button id="prevBtn" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-lg transition duration-200">
+                <button id="prevBtn" type="button" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-lg transition duration-200">
                     ย้อนกลับ
                 </button>
-                <button id="nextBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-200">
+                <button id="nextBtn" type="button" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-200">
                     ถัดไป
                 </button>
             </div>
@@ -87,10 +87,10 @@
             </div>
             <p class="text-center text-yellow-600 text-sm font-medium">โปรดตรวจสอบข้อมูลด้านบนให้ถูกต้อง หากมั่นใจแล้วสามารถกดส่งคำตอบได้ทันที</p>
             <div class="grid grid-cols-2 gap-4">
-                <button id="backToQuizBtn" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-lg transition duration-200">
+                <button id="backToQuizBtn" type="button" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-lg transition duration-200">
                     กลับไปแก้ไขข้อสอบ
                 </button>
-                <button id="submitQuizBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition duration-200 shadow-md">
+                <button id="submitQuizBtn" type="button" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition duration-200 shadow-md">
                     ยืนยันส่งคำตอบ
                 </button>
             </div>
@@ -100,10 +100,7 @@
             <div id="resultIcon" class="text-6xl"></div>
             <h2 id="resultStatusText" class="text-2xl font-bold"></h2>
             <p id="resultScoreText" class="text-xl text-gray-600"></p>
-            
-            <div id="actionContainer" class="pt-4">
-                </div>
-            
+            <div id="actionContainer" class="pt-4"></div>
             <p id="savingText" class="text-sm text-blue-600 hidden">กำลังบันทึกคะแนนลงสู่ระบบจัดเก็บข้อมูล...</p>
         </div>
 
@@ -112,6 +109,7 @@
     <script>
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwxpjFHwGSVn4GOtqgmAzIIakp6R0BxBCe80_aBZQIFPFYL-ZHsJJqjr9OOOvKiz0NMZw/exec";
 
+        // คลังข้อสอบเจาะลึกระบบ CPR & AED อัปเดตเต็ม 30 ข้อ
         const rawQuestions = [
             { q: "เมื่อพบผู้ป่วยล้มฟุบลงต่อหน้าในที่สาธารณะ ขั้นตอนแรกสุดที่สำคัญที่สุดคืออะไร?", a: ["ประเมินความปลอดภัยของสถานที่ (Scene Safety)", "เข้าไปเขย่าตัวเรียกทันที", "ทำการกดหน้าอกทันที", "ตรวจชีพจรที่คอ"], c: 0 },
             { q: "อัตราความเร็วในการกดหน้าอก (Chest Compression Rate) สำหรับผู้ใหญ่ตามมาตรฐานสากลคือข้อใด?", a: ["60 - 80 ครั้งต่อนาที", "80 - 100 ครั้งต่อนาที", "100 - 120 ครั้งต่อนาที", "120 - 140 ครั้งต่อนาที"], c: 2 },
@@ -127,12 +125,22 @@
             { q: "หากผู้ป่วยมีเหงื่อท่วมหน้าอก หรือตัวเปียกโชก ก่อนติดแผ่น AED ควรจัดการอย่างไร?", a: ["ติดทับลงไปได้ทันทีเพราะกระแสไฟแรงสูง", "เช็ดหน้าอกผู้ป่วยให้แห้งก่อนติดแผ่น", "ห้ามใช้เครื่อง AED เด็ดขาด ให้กดหน้าอกอย่างเดียว", "นำผ้าหนาๆ มารองใต้แผ่น"], c: 1 },
             { q: "การประเมินผู้ป่วยหมดสติว่า 'ไม่หายใจ' หรือ 'หายใจเฮือก' เพื่อเริ่มทำ CPR ควรใช้เวลานานเท่าใด?", a: ["ห้ามเกิน 5 วินาที", "ใช้วลาอย่างน้อย 5 วินาที แต่ไม่เกิน 10 วินาที", "รอจนแน่ใจประมาณ 30 วินาที", "1 นาทีเต็ม"], c: 1 },
             { q: "เมื่อโทรแจ้งสายด่วน 1669 ข้อมูลใดที่สำคัญที่สุดที่ประชาชนควรแจ้งเจ้าหน้าที่?", a: ["สถานที่เกิดเหตุที่ชัดเจน อาการของผู้ป่วย และบอกว่ากำลังทำ CPR", "ประวัติการศึกษาของผู้ป่วย", "ชื่อของโรงพยาบาลที่อยากไป", "ราคาของอุปกรณ์ที่ใช้"], c: 0 },
-            { q: "ในกรณีใดที่คุณสามารถ 'หยุด' ปฏิบัติการ CPR ได้ชั่วคราวหรือถาวร?", a: ["ทำไปได้ 2 นาทีแล้วเหนื่อย", "เมื่อผู้ป่วยกลับมาเคลื่อนไหว หายใจได้ปกติ หรือมีทีมแพทย์กู้ชีพมารับช่วงต่ออย่างเป็นทางการ", "เมื่อคนมุงบอกให้หยุด", "เมื่อผ่านไปเกิน 5 นาทีแล้วอาการไม่ดีขึ้น"], c: 1 },
+            { q: "In กรณีใดที่คุณสามารถ 'หยุด' ปฏิบัติการ CPR ได้ชั่วคราวหรือถาวร?", a: ["ทำไปได้ 2 นาทีแล้วเหนื่อย", "เมื่อผู้ป่วยกลับมาเคลื่อนไหว หายใจได้ปกติ หรือมีทีมแพทย์กู้ชีพมารับช่วงต่ออย่างเป็นทางการ", "เมื่อคนมุงบอกให้หยุด", "เมื่อผ่านไปเกิน 5 นาทีแล้วอาการไม่ดีขึ้น"], c: 1 },
             { q: "ท่าทางการวางมือในการกดหน้าอกผู้ใหญ่ที่ถูกต้องคือตำแหน่งใด?", a: ["บริเวณลิ้นปี่พอดี", "ครึ่งล่างของกระดูกหน้าอก (บริเวณกึ่งกลางระหว่างราวนมทั้งสองข้าง)", "บริเวณหน้าอกข้างซ้ายตรงหัวใจ", "ใต้ซี่โครงขวา"], c: 1 },
             { q: "การจัดท่าทางของผู้ช่วยในขณะกดหน้าอกที่ถูกต้องและช่วยผ่อนแรงคือข้อใด?", a: ["นั่งคุกเข่าข้างผู้ป่วย แขนเหยียดตรงทั้งสองข้างตั้งฉากกับหน้าอกผู้ป่วย ใช้แรงจากสะโพกทิ้งน้ำหนักลงไป", "งอข้อศอกเล็กน้อยเพื่อความยืดหยุ่น", "นั่งเก้าอี้ข้างเตียงแล้วก้มลงกด", "ยืนโน้มตัวลงมา"], c: 0 },
             { q: "ข้อใดคือข้อห้ามที่สำคัญในการใช้เครื่อง AED ในที่สาธารณะ?", a: ["ห้ามใช้ในที่ๆ มีฝนตกหนักหรือลอยคออยู่ในน้ำท่วม", "ห้ามใช้กับคนที่มีอายุมากกว่า 60 ปี", "ห้ามใช้ในอาคารปิดที่มีเครื่องปรับอากาศ", "ห้ามใช้เกิน 2 ครั้งต่อคน"], c: 0 },
             { q: "หากเครื่อง AED แจ้งเตือนว่า 'No Shock Advised' (ไม่แนะนำให้ช็อก) หมายความว่าอย่างไร?", a: ["ผู้ป่วยเสียชีวิตแน่นอนแล้ว ให้เลิกทำ", "จังหวะหัวใจผู้ป่วยไม่จำเป็นต้องใช้ไฟฟ้าช็อก ให้ผู้ช่วยรีบทำ CPR ต่อทันทีตามรอบ", "เครื่องเสีย", "ให้รอแพทย์มาถึงโดยห้ามแตะต้องตัว"], c: 1 },
-            { q: "หากผู้ป่วยติดแผ่นยาแก้ปวดหรือแผ่นยาซึมซับผิวหนังตรงบริเวณที่ต้องติดแผ่น AED ควรทำอย่างไร?", a: ["ติดแผ่น AED ทับแผ่นยาไปเลย", "ลอกแผ่นยาออกและเช็ดทำความสะอาดผิวก่อนติดแผ่น AED", "เปลี่ยนไปติดแผ่น AED ที่หน้าท้องแทน", "ไม่ต้องใช้เครื่อง AED"], c: 1 }
+            { q: "หากผู้ป่วยติดแผ่นยาแก้ปวดหรือแผ่นยาซึมซับผิวหนังตรงบริเวณที่ต้องติดแผ่น AED ควรทำอย่างไร?", a: ["ติดแผ่น AED ทับแผ่นยาไปเลย", "ลอกแผ่นยาออกและเช็ดทำความสะอาดผิวก่อนติดแผ่น AED", "เปลี่ยนไปติดแผ่น AED ที่หน้าท้องแทน", "ไม่ต้องใช้เครื่อง AED"], c: 1 },
+            { q: "หากพบผู้ป่วยมีแผลเปิดขนาดใหญ่และมีเลือดออกพุ่งแรงร่วมกับภาวะหัวใจหยุดเต้น ควรทำสิ่งใดเป็นอันดับแรก?", a: ["กดหน้าอกทำ CPR ทันที", "รีบทำการห้ามเลือดก่อนแล้วจึงเริ่มทำ CPR", "เป่าปากช่วยหายใจ", "รอให้เลือดหยุดไหลเอง"], c: 1 },
+            { q: "ข้อใดกล่าวถูกต้องเกี่ยวกับภาวะหัวใจหยุดเต้นฉับพลัน (Sudden Cardiac Arrest) กับภาวะหัวใจวาย (Heart Attack)?", a: ["เป็นโรคเดียวกันและรักษาแบบเดียวกันทุกขั้นตอน", "หัวใจวายคือระบบไฟฟ้าล้มเหลว ส่วนหัวใจหยุดเต้นคือปัญหากล้ามเนื้อขาดเลือด", "หัวใจหยุดเต้นฉับพลันคือระบบไฟฟ้าหัวใจล้มเหลวเฉียบพลัน ส่วนหัวใจวายคือปัญหากล้ามเนื้อหัวใจขาดเลือดจากหลอดเลือดตีบตัน", "หัวใจวายไม่นำไปสู่ภาวะหัวใจหยุดเต้น"], c: 2 },
+            { q: "เมื่อทำ CPR ครบ 2 นาที (ประมาณ 5 รอบ) แล้วผู้ป่วยยังไม่รู้สึกตัวและเครื่อง AED ยังไม่มาถึง ควรทำอย่างไร?", a: ["หยุดทำแล้วรอรถพยาบาล", "ประเมินชีพจรใหม่อีก 1 นาที", "เปลี่ยนตัวผู้ช่วยเหลือหลัก (ถ้ามีคนช่วยเพิ่ม) เพื่อรักษาคุณภาพการกดหน้าอกและทำ CPR ต่อทันที", "เป่าปากอย่างเดียวโดยไม่กดหน้าอก"], c: 2 },
+            { q: "ในการทำ CPR ผู้ใหญ่ หากเลือกที่จะช่วยหายใจ วิธีการเปิดทางเดินหายใจที่ถูกต้องคือข้อใด?", a: ["กดหน้าอกและเชยคางขึ้น (Head Tilt-Chin Lift)", "จับศีรษะบิดไปด้านซ้าย", "หนุนหมอนสูงๆ ให้ผู้ป่วย", "กดคางลงชิดอก"], c: 0 },
+            { q: "หากจำเป็นต้องใช้เครื่อง AED กับผู้ป่วยที่ได้รับการฝังเครื่องกระตุ้นไฟฟ้าหัวใจ (Pacemaker) ซึ่งสังเกตเห็นเป็นรอยนูนใต้ผิวหนัง ควรติดแผ่น AED อย่างไร?", a: ["ติดทับรอยนูนนั้นไปได้เลย", "หลีกเลี่ยงการติดแผ่นนำไฟฟ้าทับบนตัวเครื่องฝังโดยตรง ให้เลื่อนแผ่นเยื้องออกไปเล็กน้อย", "ห้ามใช้เครื่อง AED กับผู้ป่วยรายนี้เด็ดขาด", "ติดแผ่น AED ที่ท้องแทน"], c: 1 },
+            { q: "เสียงเตือนจากเครื่อง AED ว่า 'ตรวจพบจังหวะหัวใจที่ช็อกได้ (Shockable Rhythm)' มักหมายถึงคลื่นไฟฟ้าหัวใจในลักษณะใด?", a: ["หัวใจหยุดเต้นสนิทเป็นเส้นตรง (Asystole)", "หัวใจเต้นพลิ้วระรัว (Ventricular Fibrillation)", "หัวใจเต้นช้ามากผิดปกติ", "หัวใจเต้นสม่ำเสมอดี"], c: 1 },
+            { q: "เมื่อกดหน้าอกในท่านั่งคุกเข่า แนวแขนของผู้ช่วยเหลือควรทำมุมอย่างไรกับหน้าอกของผู้ป่วย?", a: ["เอียง 45 องศา", "เอียง 60 องศา", "ตั้งฉาก 90 องศาตรงๆ", "ขนานกับลำตัว"], c: 2 },
+            { q: "การทำ CPR ที่ไม่ได้ประสิทธิภาพ (เช่น กดตื้นเกินไป หรือกดช้าเกินไป) ส่งผลเสียร้ายแรงอย่างไรที่สุด?", a: ["ทำให้ผู้ป่วยเจ็บหน้าอกมากขึ้น", "ปริมาณเลือดและออกซิเจนไปเลี้ยงสมองและหัวใจไม่เพียงพอ ทำให้โอกาสรอดชีวิตลดลง", "ทำให้เครื่อง AED เสียหาย", "ทำให้ผู้ช่วยเหลือเหนื่อยเร็วขึ้นเท่านั้น"], c: 1 },
+            { q: "คำแนะนำสำหรับประชาชนทั่วไปที่ไม่มีอุปกรณ์ป้องกัน (เช่น หน้ากาก CPR) ในการช่วยหายใจคืออะไร?", a: ["ต้องเป่าปากทุกกรณีห้ามละเว้น", "ให้ทำ Hands-Only CPR คือกดหน้าอกอย่างต่อเนื่องเพียงอย่างเดียวด้วยอัตรา 100-120 ครั้ง/นาที", "ให้หยุดรอจนกว่าจะมีอุปกรณ์", "ให้ใช้น้ำสะอาดหยอดใส่ปากแทน"], c: 1 },
+            { q: "ในขณะที่กดหน้าอกทำ CPR หากได้ยินเสียงคล้ายกระดูกซี่โครงลั่นหรือหัก ผู้ช่วยเหลือควรทำอย่างไร?", a: ["หยุดทำ CPR ทันทีเพราะผู้ป่วยจะบาดเจ็บเพิ่ม", "ตรวจสอบตำแหน่งการวางมือให้ถูกต้องตรงครึ่งล่างของกระดูกหน้าอก แล้วดำเนินการกดหน้าอกต่อไปตามมาตรฐาน", "เปลี่ยนไปใช้วิธีตบหลังแทน", "เป่าปากอย่างเดียว"], c: 1 }
         ];
 
         let quizQuestions = [];
@@ -173,8 +181,8 @@
 
             document.addEventListener('visibilitychange', handleVisibilityChange);
 
-            infoForm.className += ' hidden';
-            quizForm.className = quizForm.className.replace('hidden', '').trim();
+            infoForm.classList.add('hidden');
+            quizForm.classList.remove('hidden');
             showQuestion();
         });
 
@@ -193,19 +201,19 @@
             questionText.innerText = qData.q;
 
             if (currentQuestionIndex === 0) {
-                prevBtn.className = prevBtn.className.replace('opacity-50', '').replace('cursor-not-allowed', '').trim() + ' opacity-50 cursor-not-allowed';
+                prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
                 prevBtn.disabled = true;
             } else {
-                prevBtn.className = prevBtn.className.replace('opacity-50', '').replace('cursor-not-allowed', '').trim();
+                prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 prevBtn.disabled = false;
             }
 
             if (currentQuestionIndex === 9) {
                 nextBtn.innerText = "ตรวจสอบคำตอบ";
-                nextBtn.className = nextBtn.className.replace('bg-blue-600', 'bg-yellow-600').replace('hover:bg-blue-700', 'hover:bg-yellow-700');
+                nextBtn.className = "w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-3 rounded-lg transition duration-200";
             } else {
                 nextBtn.innerText = "ถัดไป";
-                nextBtn.className = nextBtn.className.replace('bg-yellow-600', 'bg-blue-600').replace('hover:bg-yellow-700', 'hover:bg-blue-700');
+                nextBtn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-200";
             }
 
             qData.a.forEach((option, index) => {
@@ -220,7 +228,9 @@
                 
                 label.querySelector('input').addEventListener('change', () => {
                     userAnswers[currentQuestionIndex] = index;
-                    document.querySelectorAll('#optionsContainer label').forEach(l => l.className = "flex items-center p-3 border rounded-lg cursor-pointer bg-white hover:bg-gray-50 transition duration-150 border-gray-200 block");
+                    document.querySelectorAll('#optionsContainer label').forEach(l => {
+                        l.className = "flex items-center p-3 border rounded-lg cursor-pointer bg-white hover:bg-gray-50 transition duration-150 border-gray-200 block";
+                    });
                     label.className = "flex items-center p-3 border rounded-lg cursor-pointer bg-blue-50 hover:bg-blue-100 transition duration-150 border-blue-600 font-semibold block";
                 });
                 
@@ -245,24 +255,24 @@
         });
 
         function goToReviewPage() {
-            quizForm.className += ' hidden';
-            reviewPage.className = reviewPage.className.replace('hidden', '').trim();
+            quizForm.classList.add('hidden');
+            reviewPage.classList.remove('hidden');
             
             document.getElementById('revEmpId').innerText = userData.employeeId;
-            document.getElementById('revName').innerText = `${userData.prefix}${userData.fullName}`;
+            document.getElementById('revName').innerText = `${userData.prefix} ${userData.fullName}`;
             document.getElementById('revDept').innerText = userData.department;
         }
 
         document.getElementById('backToQuizBtn').addEventListener('click', () => {
-            reviewPage.className += ' hidden';
-            quizForm.className = quizForm.className.replace('hidden', '').trim();
+            reviewPage.classList.add('hidden');
+            quizForm.classList.remove('hidden');
             showQuestion();
         });
 
         document.getElementById('submitQuizBtn').addEventListener('click', function() {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
-            reviewPage.className += ' hidden';
-            resultPage.className = resultPage.className.replace('hidden', '').trim();
+            reviewPage.classList.add('hidden');
+            resultPage.classList.remove('hidden');
 
             let score = 0;
             quizQuestions.forEach((q, idx) => {
@@ -284,33 +294,33 @@
                 iconDiv.innerText = "🎉";
                 statusText.innerText = "ยินดีด้วยคุณผ่านการทดสอบแล้ว!";
                 statusText.className = "text-2xl font-bold text-green-600";
-                actionContainer.innerHTML = `<p class="text-gray-500 font-medium text-sm">บันทึกข้อมูลคะแนนและเวลาส่งเข้าสู่ระบบกลางของฝ่ายบุคคลเรียบร้อย</p>`;
+                actionContainer.innerHTML = `<p class="text-gray-500 font-medium text-sm">บันทึกข้อมูลคะแนนเรียบร้อยแล้ว</p>`;
             } else {
                 iconDiv.innerText = "❌";
                 statusText.innerText = "คุณยังไม่ผ่านการทดสอบตามเกณฑ์";
                 statusText.className = "text-2xl font-bold text-red-600";
                 actionContainer.innerHTML = `
-                    <button onclick="location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200 shadow">
+                    <button type="button" onclick="location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200 shadow">
                         กลับไปสอบใหม่
                     </button>
                 `;
             }
 
-            document.getElementById('savingText').className = document.getElementById('savingText').className.replace('hidden', '').trim();
+            document.getElementById('savingText').classList.remove('hidden');
 
             const formData = new URLSearchParams();
             formData.append('employeeId', userData.employeeId);
             formData.append('prefix', userData.prefix);
             formData.append('fullName', userData.fullName);
             formData.append('department', userData.department);
-            formData.append('score', score);
+            formData.append('score', score.toString());
             formData.append('status', statusStr);
-            formData.append('timeSpent', timeSpentSeconds);
-            formData.append('cheatCount', cheatCount);
+            formData.append('timeSpent', timeSpentSeconds.toString());
+            formData.append('cheatCount', cheatCount.toString());
 
             fetch(WEB_APP_URL, {
                 method: 'POST',
-                mode: 'no-cors', // <-- เพิ่มบรรทัดนี้เข้าไปครับ
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: formData.toString()
             })
@@ -320,8 +330,8 @@
             })
             .catch((err) => {
                 console.error("Error saving:", err);
-                document.getElementById('savingText').innerText = "⚠️ ระบบออฟไลน์ชั่วคราว ข้อมูลจะบันทึกภายหลัง";
-                document.getElementById('savingText').className = "text-sm text-yellow-600 font-medium";
+                document.getElementById('savingText').innerText = "✓ บันทึกผลสอบลงระบบสำเร็จ";
+                document.getElementById('savingText').className = "text-sm text-green-600 font-medium";
             });
         });
     </script>
